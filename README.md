@@ -18,10 +18,6 @@ Metadata is synced from [civitai.red](https://civitai.red) for files that are **
 
 Styles and click handling live in `style.css` and `javascript/lora_manager.js` (Forge loads them automatically). After UI changes, restart WebUI or hard-refresh the page.
 
-## Layout mock (optional)
-
-`python dev/mock_server.py` serves a fake txt2img chrome at http://127.0.0.1:7861 for layout work **without** Forge. It uses the same JS/CSS as the extension and fake `/lora-manager/*` data. The live WebUI always lists LoRAs from disk, never the mock catalog.
-
 ## Sidecar files (both are written)
 
 Next to `my_lora.safetensors`:
