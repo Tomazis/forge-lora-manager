@@ -1,0 +1,809 @@
+.lora-manager-picker {
+  --lm-bg: var(--input-background-fill, var(--background-fill-secondary, #1f1f1f));
+  --lm-surface: var(--block-background-fill, var(--background-fill-primary, #141414));
+  --lm-text: var(--body-text-color, #ddd);
+  --lm-border: var(--input-border-color, var(--border-color-primary, #444));
+  --lm-hover: color-mix(in srgb, var(--lm-text) 10%, transparent);
+  --lm-active: color-mix(in srgb, var(--lm-text) 18%, transparent);
+  --lm-shadow: color-mix(in srgb, var(--lm-text) 32%, transparent);
+  grid-column: 1 / -1 !important;
+  width: 100%;
+  margin: 0.5rem 0 0;
+  position: relative;
+  color: var(--lm-text);
+  z-index: 20;
+}
+
+.lora-manager-picker.is-open {
+  z-index: 10050;
+}
+
+.lora-manager-picker .lm-picker-label {
+  font-size: 0.9rem;
+  opacity: 0.85;
+  margin: 0 0 0.25rem;
+}
+
+.lora-manager-picker .lm-picker-wrap {
+  position: relative;
+  overflow: visible;
+}
+
+.lora-manager-picker .lm-picker-box {
+  position: relative;
+  min-height: 48px;
+  max-height: 12rem;
+  overflow: auto;
+  display: block;
+  padding: 0.45rem 2.85rem 0.45rem 0.6rem;
+  border: 1px solid var(--lm-border);
+  border-radius: 0.65rem;
+  background: var(--lm-bg);
+  cursor: text;
+}
+
+.lora-manager-picker .lm-picker-hit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2.6rem;
+  height: 100%;
+  min-height: 48px;
+  z-index: 2;
+  border: 0;
+  border-radius: 0 0.65rem 0.65rem 0;
+  background: color-mix(in srgb, var(--lm-text) 8%, transparent);
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  font-size: 1.05rem;
+}
+
+.lora-manager-picker .lm-menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  bottom: auto;
+  width: auto;
+  height: min(520px, 70vh);
+  max-height: 70vh;
+  z-index: 10000;
+}
+
+.lora-manager-picker .lm-picker-placeholder {
+  opacity: 0.6;
+}
+
+.lora-manager-picker .lm-actions {
+  float: right;
+  display: flex;
+  gap: 0.25rem;
+  margin: 0 0 0.25rem 0.35rem;
+}
+
+.lora-manager-picker .lm-btn,
+.lora-manager-picker .lm-refresh,
+.gradio-container .lm-btn,
+.lm-overlay .lm-btn,
+.lora-manager-tab .lm-btn,
+.lm-btn,
+.lm-x,
+.lm-overlay-close,
+.lm-copy-all,
+.lm-star {
+  appearance: none;
+  border: 1px solid var(--neutral-300, var(--input-border-color, #555));
+  border-radius: 0.5rem;
+  background: var(--button-secondary-background-fill, var(--background-fill-secondary, #2b2b2b));
+  color: var(--button-secondary-text-color, var(--body-text-color, #eee));
+  padding: 0.4rem 0.85rem;
+  min-height: 2.25rem;
+  height: auto;
+  line-height: 1.25;
+  cursor: pointer;
+}
+
+.lm-x {
+  padding: 0.3rem 0.55rem;
+  min-width: 1.8rem;
+  line-height: 1;
+}
+
+.lora-manager-picker .lm-btn.is-active,
+.lm-btn.is-active {
+  background: color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.lm-refresh {
+  background: transparent;
+  border-color: transparent;
+}
+
+.lm-chip {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.175rem;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid var(--lm-border, var(--input-border-color, #444));
+  border-radius: 0.75rem;
+  background: var(--lm-surface, var(--block-background-fill, #141414));
+  max-width: 100%;
+}
+
+.lm-chip-name {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.lm-chip-trigs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  width: 100%;
+  padding: 0.2rem 0 0.1rem;
+}
+
+.lora-manager-picker .lm-trig.off,
+.lm-trig.off {
+  opacity: 0.4;
+  text-decoration: line-through;
+}
+
+.lm-chip.off {
+  opacity: 0.45;
+}
+
+.lm-w {
+  user-select: none;
+  cursor: ew-resize;
+  padding: 0 0.35rem;
+  border: 1px dashed var(--lm-border, var(--input-border-color, #444));
+  border-radius: 0.35rem;
+}
+
+.lm-menu {
+  position: fixed;
+  z-index: 4000;
+  display: flex;
+  overflow: hidden;
+  border: 1px solid var(--input-border-color, #444);
+  border-radius: 0.65rem;
+  background: var(--input-background-fill, #1f1f1f);
+  color: var(--body-text-color, #ddd);
+  box-shadow: 0 10px 28px color-mix(in srgb, currentColor 32%, transparent);
+}
+
+.lm-menu .lm-preset-menu {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+}
+
+.lm-menu .lm-left {
+  width: 200px;
+  overflow: auto;
+  border-right: 1px solid var(--input-border-color, #444);
+}
+
+.lm-menu .lm-right {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.lm-menu .lm-top {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.4rem;
+  align-items: center;
+  border-bottom: 1px solid var(--input-border-color, #444);
+}
+
+.lm-input,
+.lora-manager-picker .lm-search,
+.lora-manager-tab .lm-search,
+.lora-manager-tab select,
+.lm-card textarea,
+.lm-card input[type="text"],
+.lm-card input[type="number"] {
+  width: 100%;
+  margin: 0.2rem 0 0.5rem;
+  padding: 8px 10px;
+  border: 1px solid var(--input-border-color, #d1d5db);
+  border-radius: 8px;
+  background: var(--input-background-fill, #fff);
+  color: var(--body-text-color, inherit);
+  font: inherit;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.lm-menu .lm-search {
+  flex: 1;
+  margin: 0;
+}
+
+.lm-menu .lm-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.lm-menu .lm-list,
+.lm-menu .lm-grid {
+  overflow: auto;
+  overflow-anchor: none;
+  padding: 0.35rem;
+  flex: 1;
+}
+
+.lm-menu .lm-item,
+.lm-menu .lm-folder {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  padding: 0.55rem 0.8rem;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+.lm-menu .lm-item:hover,
+.lm-menu .lm-folder:hover,
+.lm-menu .lm-tile:hover {
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.lm-menu .lm-folder.active {
+  background: color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.lm-menu .lm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 0.5rem;
+  align-content: start;
+  grid-auto-rows: min-content;
+}
+
+.lora-manager-tab .lm-lib-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 286px);
+  gap: 0.65rem;
+  align-content: start;
+  justify-content: start;
+  grid-auto-rows: min-content;
+}
+
+.lm-tile,
+.lm-lib-tile {
+  position: relative;
+  display: block;
+  aspect-ratio: 286 / 384;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--input-border-color, #444);
+  border-radius: 0.5rem;
+  background-color: #111;
+  background-image: url(./file=html/card-no-preview.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.lora-manager-tab .lm-lib-tile {
+  width: 286px;
+  height: 384px;
+  aspect-ratio: 286 / 384;
+}
+
+.lm-tile img,
+.lm-lib-tile img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.lm-examples {
+  display: block;
+}
+
+.lm-carousel-stage {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) 2.25rem;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.lm-carousel-slide {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 1px solid var(--input-border-color, #444);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: #111;
+  cursor: pointer;
+}
+
+.lm-carousel-slide img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 384px;
+  object-fit: contain;
+  aspect-ratio: 286 / 384;
+  background: #111;
+}
+
+.lm-carousel-nav {
+  appearance: none;
+  height: 2.5rem;
+  border: 1px solid var(--neutral-300, #666);
+  border-radius: 0.5rem;
+  background: var(--button-secondary-background-fill, #3a3a3a);
+  color: var(--button-secondary-text-color, #f3f3f3);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.lm-carousel-nav:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.lm-carousel-count {
+  margin-top: 0.35rem;
+  text-align: center;
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+.lm-tile > span:not(.star),
+.lm-lib-tile > span,
+.lm-lib-tile small {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1.4rem 0.4rem 0.4rem;
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #fff;
+  background: linear-gradient(transparent, color-mix(in srgb, #000 72%, transparent));
+}
+
+.lm-lib-tile small {
+  bottom: 1.35rem;
+  background: none;
+  padding-bottom: 0;
+  opacity: 0.85;
+}
+
+.lm-item .star {
+  padding: 0 0.2rem;
+}
+
+.lm-tile .star {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: auto;
+  bottom: auto;
+  z-index: 1;
+  box-sizing: border-box;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 0 3px;
+  line-height: 1;
+  font-size: 14px;
+  overflow: visible;
+  text-overflow: unset;
+  white-space: nowrap;
+  color: #fff;
+  border-radius: 999px;
+  background: color-mix(in srgb, #000 45%, transparent);
+}
+
+.lora-manager-picker .lm-preset-menu {
+  position: absolute;
+  z-index: 1001;
+  right: 0;
+  top: calc(100% + 6px);
+  min-width: 240px;
+  padding: 0.35rem;
+  border: 1px solid var(--lm-border);
+  border-radius: 0.65rem;
+  background: var(--lm-bg);
+}
+
+.lora-manager-picker .lm-preset-menu .hdr,
+.lora-manager-picker .lm-preset-menu .row {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+  padding: 0.3rem;
+}
+
+.lm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: color-mix(in srgb, #000 55%, transparent);
+}
+
+.lm-overlay-panel {
+  position: relative;
+  width: min(720px, 96vw);
+  max-height: 92vh;
+  overflow: auto;
+  padding: 16px 16px 20px;
+  border: 1px solid var(--input-border-color, #444);
+  border-radius: 8px;
+  background:
+    linear-gradient(var(--input-background-fill, #1f2937), var(--input-background-fill, #1f2937)),
+    #1f2937;
+  color: var(--body-text-color, inherit);
+  box-shadow: 0 16px 40px color-mix(in srgb, #000 40%, transparent);
+}
+
+.lm-overlay-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+}
+
+.lm-card-media {
+  position: relative;
+  margin: 0 0 0.6rem;
+  min-height: 220px;
+  background-color: #111;
+  background-image: url(./file=html/card-no-preview.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.lm-card-media:has(img) {
+  background-image: none;
+  min-height: 0;
+}
+
+.lm-card-preview {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(52vh, 420px);
+  object-fit: contain;
+  object-position: center;
+  background: #111;
+}
+
+.lm-star,
+.lm-copy-all,
+.lm-overlay-close {
+  position: absolute;
+  top: 8px;
+  z-index: 2;
+  width: auto;
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  height: auto;
+  padding: 0.35rem 0.7rem;
+  background: #111 !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+}
+
+.lm-star {
+  left: 8px;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.lm-copy-all {
+  right: 8px;
+}
+
+.lm-overlay-close {
+  top: 12px;
+  right: 12px;
+}
+
+.lm-overlay-panel .lm-copy-all {
+  right: 48px;
+}
+
+.lm-star.is-on,
+.star.is-on {
+  color: #fbbf24;
+}
+
+.lm-civitai {
+  display: inline-block;
+  margin: 0.35rem 0 0.55rem;
+  color: inherit;
+  text-decoration: underline;
+}
+
+.lm-muted {
+  opacity: 0.75;
+  font-size: 0.9rem;
+}
+
+.lm-filename {
+  font-family: var(--font-mono, ui-monospace, Consolas, monospace);
+  word-break: break-all;
+}
+
+.lm-label,
+.lm-card h4 {
+  display: block;
+  margin: 0.55rem 0 0.2rem;
+  font-weight: 600;
+}
+
+.lm-desc {
+  margin: 0.2rem 0 0.5rem;
+  padding: 8px 10px;
+  border: 1px solid var(--input-border-color, #d1d5db);
+  border-radius: 8px;
+  background: var(--input-background-fill, #fff);
+  overflow: auto;
+  max-height: 220px;
+}
+
+.lm-desc p { margin: 0 0 0.6em; }
+.lm-desc a { color: inherit; }
+
+.lm-triggers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0 0 0.35rem;
+  align-items: baseline;
+}
+
+.lm-trig,
+.gradio-container button.lm-trig,
+.lora-manager-picker button.lm-trig,
+.lora-manager-tab button.lm-trig,
+.lm-overlay button.lm-trig,
+.lm-chip button.lm-trig {
+  border: 1px solid var(--input-border-color, #444);
+  border-radius: 8px;
+  background: var(--input-background-fill, #1f1f1f);
+  color: inherit;
+  padding: 8px 14px !important;
+  line-height: 1.35 !important;
+  min-height: 2rem;
+  cursor: pointer;
+}
+
+.lm-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+  align-items: start;
+}
+
+.lm-card .lm-btn,
+.lm-overlay .lm-btn,
+.lora-manager-tab .lm-lib-toolbar .lm-btn {
+  background: var(--button-secondary-background-fill, #3a3a3a) !important;
+  color: var(--button-secondary-text-color, #f3f3f3) !important;
+  border: 1px solid var(--neutral-300, #666) !important;
+}
+
+.lm-status {
+  min-height: 1.2em;
+  margin-top: 0.35rem;
+  opacity: 0.85;
+}
+
+.lm-example-view img {
+  display: block;
+  border-radius: 8px;
+  width: min(100%, 420px);
+  height: auto;
+  max-height: 52vh;
+  margin: 0 auto 12px;
+  object-fit: contain;
+}
+
+.lm-example-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lm-meta-row pre {
+  margin: 4px 0 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid var(--input-border-color, #444);
+  border-radius: 8px;
+  background: var(--input-background-fill, #1f1f1f);
+}
+
+.lora-manager-tab {
+  padding: 0.75rem;
+  color: var(--body-text-color, inherit);
+}
+
+.lora-manager-tab .lm-lib {
+  display: grid;
+  grid-template-columns: minmax(180px, 220px) minmax(0, 1fr) minmax(280px, 360px);
+  gap: 0.75rem;
+  height: 70vh;
+  min-height: 480px;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.lora-manager-tab .lm-lib-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--input-border-color, #444);
+  border-radius: 0.65rem;
+  padding: 0.6rem;
+  background: var(--block-background-fill, #141414);
+}
+
+.lora-manager-tab .lm-lib-toolbar .lm-search,
+.lora-manager-tab .lm-lib-toolbar .lm-input {
+  flex: 1 1 160px;
+  min-width: 140px;
+  margin: 0;
+}
+
+.lora-manager-tab .lm-lib-folders,
+.lora-manager-tab .lm-card {
+  border: 1px solid var(--input-border-color, #444);
+  border-radius: 0.65rem;
+  padding: 0.6rem;
+  background: var(--block-background-fill, #141414);
+}
+
+.lora-manager-tab .lm-lib-folders {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: auto;
+  min-height: 0;
+  height: 100%;
+}
+
+.lora-manager-tab .lm-folder {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.4rem 0.55rem;
+  border: 0;
+  border-radius: 0.4rem;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.lora-manager-tab .lm-folder.active,
+.lora-manager-tab .lm-folder:hover {
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.lora-manager-tab .lm-lib-grid {
+  overflow: auto;
+  overflow-anchor: none;
+  min-height: 0;
+  height: 100%;
+  align-content: start;
+}
+
+.lora-manager-tab .lm-card {
+  min-height: 0;
+  height: 100%;
+  overflow: auto;
+  overflow-anchor: none;
+}
+
+.lm-card-modal {
+  border: 0;
+  padding: 0.15rem 0.2rem;
+  background:
+    linear-gradient(var(--input-background-fill, #1f2937), var(--input-background-fill, #1f2937)),
+    #1f2937;
+}
+
+.lora-manager-picker,
+.lora-manager-tab,
+.lm-menu,
+.lm-overlay,
+.lm-chip,
+.lm-btn,
+.lm-input,
+.lm-trig,
+.lm-tile,
+.lm-lib-tile {
+  box-sizing: border-box;
+}
+
+.lora-manager-picker button,
+.lora-manager-tab button,
+.lm-menu button,
+.lm-overlay button,
+.lm-chip button,
+.lm-input {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+#txt2img_prompt_container,
+#img2img_prompt_container,
+#txt2img_prompt_row,
+#img2img_prompt_row,
+#txt2img_neg_prompt_row,
+#img2img_neg_prompt_row {
+  overflow: visible !important;
+}
+
+#txt2img_prompt_container:has(.lora-manager-picker.is-open),
+#img2img_prompt_container:has(.lora-manager-picker.is-open),
+#txt2img_prompt_row:has(.lora-manager-picker.is-open),
+#img2img_prompt_row:has(.lora-manager-picker.is-open) {
+  position: relative;
+  z-index: 10050;
+}
+
+.gradio-container .lora-manager-picker {
+  overflow: visible !important;
+}
+
+.lm-menu {
+  z-index: 10000;
+}
+
+.lm-overlay {
+  z-index: 200000;
+}
